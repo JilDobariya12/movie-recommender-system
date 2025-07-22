@@ -47,6 +47,11 @@ Built as a part of my ML learning journey, this app combines:
 
 ---
 
+⚠️ Note: `similarity.pkl` not included due to GitHub size limits.
+Run `generate_similarity.py` to regenerate it using the dataset.
+
+---
+
 ## 💻 Run Locally
 
 ```bash
