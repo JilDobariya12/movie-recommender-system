@@ -13,9 +13,9 @@ def download_similarity_file():
     output = "similarity.pkl"
     try:
         gdown.download(url, output, quiet=False)
-        print("similarity.pkl downloaded successfully using gdown.")
+        print("✅ similarity.pkl downloaded using gdown.")
     except Exception as e:
-        print(f"Error downloading similarity.pkl: {e}")
+        print(f"❌ Error downloading similarity.pkl: {e}")
 
 # Fetch poster from TMDb API
 def fetch_poster(movie_id):
