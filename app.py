@@ -5,18 +5,17 @@ import streamlit as st
 import requests
 import time
 
-# Download similarity.pkl if not found
+import gdown
+
 def download_similarity_file():
-    url = "https://drive.google.com/uc?export=download&id=1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR"
+    file_id = "1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR"
+    url = f"https://drive.google.com/uc?id={file_id}"
     output = "similarity.pkl"
     try:
-        urllib.request.urlretrieve(url, output)
-        print("similarity.pkl downloaded successfully.")
+        gdown.download(url, output, quiet=False)
+        print("similarity.pkl downloaded successfully using gdown.")
     except Exception as e:
         print(f"Error downloading similarity.pkl: {e}")
-
-if not os.path.exists("similarity.pkl"):
-    download_similarity_file()
 
 # Fetch poster from TMDb API
 def fetch_poster(movie_id):
