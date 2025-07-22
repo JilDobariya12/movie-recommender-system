@@ -4,15 +4,12 @@ import requests
 import time
 import os
 
-# Step 1: Auto-download similarity.pkl if missing
+# ✅ Safe download using file ID
 def download_similarity_file():
     import gdown
     file_id = "1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR"
-    url = f"https://drive.google.com/uc?id={file_id}"
-    output = "similarity.pkl"
-    gdown.download(url, output, quiet=False)
+    gdown.download(id=file_id, output="similarity.pkl", quiet=False)
 
-# Check and download
 if not os.path.exists("similarity.pkl"):
     download_similarity_file()
 
