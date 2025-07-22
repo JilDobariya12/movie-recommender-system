@@ -2,47 +2,49 @@ import pickle
 import streamlit as st
 import requests
 import time
-
 import os
-import gdown
 
+# Step 1: Auto-download similarity.pkl if missing
+def download_similarity_file():
+    import gdown
+    file_id = "1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR"
+    url = f"https://drive.google.com/uc?id={file_id}"
+    output = "similarity.pkl"
+    gdown.download(url, output, quiet=False)
+
+# Check and download
+if not os.path.exists("similarity.pkl"):
+    download_similarity_file()
+
+# ------------------------------
+# Your original app code below
 def fetch_poster(movie_id):
     api_key = "c7385d9faab6ffabaf38b1f824a8b343"
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
     time.sleep(2)
-    print("----------------->>>",url)
-
     try:
         response = requests.get(url, timeout=5)
-        print(response)
         response.raise_for_status()
         data = response.json()
         poster_path = data.get('poster_path')
         if poster_path:
-            print("this isssss pathhhh",poster_path)
             return "https://image.tmdb.org/t/p/w500/" + poster_path
-
         else:
             return "https://via.placeholder.com/500x750?text=No+Image"
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching poster for movie ID {movie_id}: {e}")
+    except requests.exceptions.RequestException:
         return "https://via.placeholder.com/500x750?text=Error"
-
 
 def recommend(movie):
     index = movies[movies['title'] == movie].index[0]
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
     recommended_movie_names = []
     recommended_movie_posters = []
-
     for i in distances[1:6]:
         time.sleep(1)
         movie_id = movies.iloc[i[0]].id
         recommended_movie_names.append(movies.iloc[i[0]].title)
         recommended_movie_posters.append(fetch_poster(movie_id))
-
     return recommended_movie_names, recommended_movie_posters
-
 
 st.header('🎬 Movie Recommender System')
 
@@ -53,7 +55,7 @@ movie_list = movies['title'].values
 selected_movie = st.selectbox("Type or select a movie from the dropdown", movie_list)
 
 if st.button('Show Recommendation'):
-    recommended_movie_names,recommended_movie_posters = recommend(selected_movie)
+    recommended_movie_names, recommended_movie_posters = recommend(selected_movie)
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         st.text(recommended_movie_names[0])
