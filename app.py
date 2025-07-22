@@ -6,11 +6,6 @@ import time
 import os
 import gdown
 
-if not os.path.exists("similarity.pkl"):
-    gdown.download("https://drive.google.com/file/d/1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR/view?usp=drive_link", "similarity.pkl", quiet=False)
-
-similarity = pickle.load(open("similarity.pkl", "rb"))
-
 def fetch_poster(movie_id):
     api_key = "c7385d9faab6ffabaf38b1f824a8b343"
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
