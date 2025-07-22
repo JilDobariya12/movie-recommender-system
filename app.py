@@ -11,9 +11,9 @@ def download_similarity_file():
     output = "similarity.pkl"
     try:
         urllib.request.urlretrieve(url, output)
-        print("✅ similarity.pkl downloaded from Dropbox")
+        print("similarity.pkl downloaded from Dropbox")
     except Exception as e:
-        st.error(f"❌ Error downloading similarity.pkl: {e}")
+        st.error(f"Error downloading similarity.pkl: {e}")
 
 # Check and download if needed
 if not os.path.exists("similarity.pkl"):
