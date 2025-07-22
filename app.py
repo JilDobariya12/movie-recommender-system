@@ -1,15 +1,17 @@
+import os
 import pickle
 import streamlit as st
 import requests
 import time
-import os
 
-# ✅ Safe download using file ID
+# ✅ Dropbox direct download (no gdown needed)
 def download_similarity_file():
-    import gdown
-    file_id = "1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR"
-    gdown.download(id=file_id, output="similarity.pkl", quiet=False)
+    url = "https://www.dropbox.com/s/abc123xyz/similarity.pkl?dl=1"  # change this!
+    output = "similarity.pkl"
+    import subprocess
+    subprocess.run(["wget", url, "-O", output])
 
+# Download if not found
 if not os.path.exists("similarity.pkl"):
     download_similarity_file()
 
