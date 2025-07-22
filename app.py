@@ -1,12 +1,11 @@
 import os
-import urllib.request
 import pickle
 import streamlit as st
 import requests
 import time
-
 import gdown
 
+# Download similarity.pkl from Google Drive if not present
 def download_similarity_file():
     file_id = "1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR"
     url = f"https://drive.google.com/uc?id={file_id}"
@@ -15,9 +14,17 @@ def download_similarity_file():
         gdown.download(url, output, quiet=False)
         print("✅ similarity.pkl downloaded using gdown.")
     except Exception as e:
-        print(f"❌ Error downloading similarity.pkl: {e}")
+        st.error(f"❌ Error downloading similarity.pkl: {e}")
 
-# Fetch poster from TMDb API
+# Download before loading
+if not os.path.exists("similarity.pkl"):
+    download_similarity_file()
+
+# Load movie data and similarity
+movies = pickle.load(open('movie_list.pkl', 'rb'))  # Make sure this file exists
+similarity = pickle.load(open('similarity.pkl', 'rb'))
+
+# ------------------------------
 def fetch_poster(movie_id):
     api_key = "c7385d9faab6ffabaf38b1f824a8b343"
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
@@ -34,7 +41,6 @@ def fetch_poster(movie_id):
     except requests.exceptions.RequestException:
         return "https://via.placeholder.com/500x750?text=Error"
 
-# Recommend similar movies
 def recommend(movie):
     index = movies[movies['title'] == movie].index[0]
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
@@ -47,11 +53,7 @@ def recommend(movie):
         recommended_movie_posters.append(fetch_poster(movie_id))
     return recommended_movie_names, recommended_movie_posters
 
-# Streamlit UI
 st.header('🎬 Movie Recommender System')
-
-movies = pickle.load(open('movie_list.pkl', 'rb'))  # Ensure this file exists in your app directory
-similarity = pickle.load(open('similarity.pkl', 'rb'))
 
 movie_list = movies['title'].values
 selected_movie = st.selectbox("Type or select a movie from the dropdown", movie_list)
