@@ -1,27 +1,26 @@
 import os
+import urllib.request
 import pickle
 import streamlit as st
 import requests
 import time
-import gdown
 
-# Download similarity.pkl from Google Drive if not present
+# Dropbox download
 def download_similarity_file():
-    file_id = "1NF5xj5b7bZThqZXLGwxTbEcY5ATDnGLR"
-    url = f"https://drive.google.com/uc?id={file_id}"
+    url = "https://www.dropbox.com/scl/fi/8jdlz3c0t1bb20v7o40c3/similarity.pkl?rlkey=lt4q4br6yccvwl886bmy01fl9&st=n2d5cre4&dl=1"
     output = "similarity.pkl"
     try:
-        gdown.download(url, output, quiet=False)
-        print("✅ similarity.pkl downloaded using gdown.")
+        urllib.request.urlretrieve(url, output)
+        print("✅ similarity.pkl downloaded from Dropbox")
     except Exception as e:
         st.error(f"❌ Error downloading similarity.pkl: {e}")
 
-# Download before loading
+# Check and download if needed
 if not os.path.exists("similarity.pkl"):
     download_similarity_file()
 
-# Load movie data and similarity
-movies = pickle.load(open('movie_list.pkl', 'rb'))  # Make sure this file exists
+# Load pickle files
+movies = pickle.load(open('movie_list.pkl', 'rb'))  # Ensure this file is in the app folder
 similarity = pickle.load(open('similarity.pkl', 'rb'))
 
 # ------------------------------
@@ -53,6 +52,7 @@ def recommend(movie):
         recommended_movie_posters.append(fetch_poster(movie_id))
     return recommended_movie_names, recommended_movie_posters
 
+# Streamlit UI
 st.header('🎬 Movie Recommender System')
 
 movie_list = movies['title'].values
