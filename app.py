@@ -5,7 +5,6 @@ import streamlit as st
 import requests
 import time
 
-# Dropbox download
 def download_similarity_file():
     url = "https://www.dropbox.com/scl/fi/8jdlz3c0t1bb20v7o40c3/similarity.pkl?rlkey=lt4q4br6yccvwl886bmy01fl9&st=n2d5cre4&dl=1"
     output = "similarity.pkl"
@@ -15,15 +14,12 @@ def download_similarity_file():
     except Exception as e:
         st.error(f"Error downloading similarity.pkl: {e}")
 
-# Check and download if needed
 if not os.path.exists("similarity.pkl"):
     download_similarity_file()
 
-# Load pickle files
-movies = pickle.load(open('movie_list.pkl', 'rb'))  # Ensure this file is in the app folder
+movies = pickle.load(open('movie_list.pkl', 'rb'))  
 similarity = pickle.load(open('similarity.pkl', 'rb'))
 
-# ------------------------------
 def fetch_poster(movie_id):
     api_key = "c7385d9faab6ffabaf38b1f824a8b343"
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
@@ -52,7 +48,6 @@ def recommend(movie):
         recommended_movie_posters.append(fetch_poster(movie_id))
     return recommended_movie_names, recommended_movie_posters
 
-# Streamlit UI
 st.header('🎬 Movie Recommender System')
 
 movie_list = movies['title'].values
